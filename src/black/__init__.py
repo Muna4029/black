@@ -1228,11 +1228,25 @@ def _format_str_once(
             src_contents.encode("utf-8"), mode
         )
 
-        src_node = lib2to3_parse(
-            normalized_contents.lstrip(), target_versions=mode.target_versions
-        )
+        try:
+            src_node = lib2to3_parse(
+                normalized_contents.lstrip(), target_versions=mode.target_versions
+            )
+        except InvalidInput as e:
+            raise InvalidInput(
+                f"{e}\n"
+                "The above error may be due to syntax that is not supported by "
+                "lib2to3. Please report this to the Black maintainers."
+            ) from None
     else:
-        src_node = lib2to3_parse(src_contents.lstrip(), mode.target_versions)
+        try:
+            src_node = lib2to3_parse(src_contents.lstrip(), mode.target_versions)
+        except InvalidInput as e:
+            raise InvalidInput(
+                f"{e}\n"
+                "The above error may be due to syntax that is not supported by "
+                "lib2to3. Please report this to the Black maintainers."
+            ) from None
 
     dst_blocks: list[LinesBlock] = []
     if mode.target_versions:

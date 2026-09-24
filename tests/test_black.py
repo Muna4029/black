@@ -1000,7 +1000,7 @@ class BlackTestCase(BlackBaseTestCase):
         invalid = "return if you can"
         with self.assertRaises(black.InvalidInput) as e:
             black.format_file_contents(invalid, mode=mode, fast=False)
-        self.assertEqual(str(e.exception), "Cannot parse: 1:7: return if you can")
+        self.assertEqual(str(e.exception), "Cannot parse: 1:7: return if you can\nThe above error may be due to syntax that is not supported by lib2to3. Please report this to the Black maintainers.")
 
         just_crlf = "\r\n"
         with self.assertRaises(black.NothingChanged):
