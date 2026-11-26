@@ -1232,7 +1232,7 @@ def _format_str_once(
             normalized_contents.lstrip(), target_versions=mode.target_versions
         )
     else:
-        src_node = lib2to3_parse(src_contents.lstrip(), mode.target_versions)
+        src_node = lib2to3_parse(src_contents.lstrip(), target_versions=mode.target_versions)
 
     dst_blocks: list[LinesBlock] = []
     if mode.target_versions:

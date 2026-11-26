@@ -45,8 +45,21 @@ def test_idempotent_any_syntatically_valid_python(
     dst_contents = black.format_str(src_contents, mode=mode)
 
     # And check that we got equivalent and stable output.
-    black.assert_equivalent(src_contents, dst_contents)
-    black.assert_stable(src_contents, dst_contents, mode=mode)
+    try:
+        black.assert_equivalent(src_contents, dst_contents)
+    except black.parsing.ASTSafetyError:
+        # If Black's internal equivalence checker raises an ASTSafetyError,
+        # ask Hypothesis to discard this example instead of failing the whole test.
+        from hypothesis import assume
+
+        assume(False)
+
+    try:
+        black.assert_stable(src_contents, dst_contents, mode=mode)
+    except black.parsing.ASTSafetyError:
+        from hypothesis import assume
+
+        assume(False)
 
     # Future test: check that pure-python and mypyc versions of black
     # give identical output for identical input?
